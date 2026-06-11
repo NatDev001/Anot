@@ -1,0 +1,162 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#12170d;
+    min-height:100vh;
+    color:white;
+}
+
+header{
+    background:black;
+    padding:20px;
+    border-bottom-left-radius:20px;
+    border-bottom-right-radius:20px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+header h1{
+    font-size:48px;
+    font-weight:300;
+}
+
+.search-box{
+    flex:1;
+    display:flex;
+    background:white;
+    border-radius:40px;
+    overflow:hidden;
+}
+
+.search-box input{
+    flex:1;
+    border:none;
+    padding:15px;
+    outline:none;
+    font-size:16px;
+}
+
+.search-box button{
+    border:none;
+    background:white;
+    padding:0 20px;
+    cursor:pointer;
+    color:#f1c40f;
+    font-size:20px;
+}
+
+.icons{
+    display:flex;
+    gap:15px;
+    font-size:28px;
+    color:#f1c40f;
+}
+
+main{
+    padding:30px;
+}
+
+.category{
+    margin-bottom:30px;
+}
+
+.category-title{
+    font-size:32px;
+    margin-bottom:15px;
+}
+
+.note-card{
+    background:#f3eee8;
+    border-radius:25px;
+    padding:20px;
+    color:#333;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin: 10px;
+}
+
+.note-content{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.dot{
+    width:25px;
+    height:25px;
+    background:#f1c40f;
+    border-radius:50%;
+}
+
+.menu{
+    color:#f1c40f;
+    font-size:28px;
+}
+
+#addBtn{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    width:85px;
+    height:85px;
+    border-radius:20px;
+    border:none;
+    background:#f1c40f;
+    color:black;
+    font-size:60px;
+    cursor:pointer;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    width:90%;
+    max-width:500px;
+    background:white;
+    color:black;
+    border-radius:15px;
+    padding:20px;
+}
+
+.modal-content h2{
+    margin-bottom:15px;
+}
+
+.modal-content input,
+.modal-content textarea{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+.modal-content textarea{
+    min-height:150px;
+    resize:none;
+}
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+.actions button{
+    padding:10px 20px;
+    cursor:pointer;
+}

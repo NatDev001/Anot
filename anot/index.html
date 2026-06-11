@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anot</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <header>
+        <h1>Anot</h1>
+
+        <div class="search-box">
+            <input type="text" placeholder="Pesquisar...">
+            <button>🔍</button>
+        </div>
+
+        <div class="icons">
+            <span>👤</span>
+            <span>⋮</span>
+        </div>
+    </header>
+
+    <main id="notesContainer"></main>
+
+    <button id="addBtn">+</button>
+
+    <!-- Modal de criação -->
+    <div id="modal" class="modal">
+
+        <div class="modal-content">
+
+            <h2>Nova Anotação</h2>
+
+            <input
+                type="text"
+                id="category"
+                placeholder="Categoria"
+            >
+
+            <textarea
+                id="note"
+                placeholder="Digite sua anotação..."
+            ></textarea>
+
+            <div class="actions">
+                <button id="cancelBtn">
+                    Cancelar
+                </button>
+
+                <button id="saveBtn">
+                    Salvar
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
