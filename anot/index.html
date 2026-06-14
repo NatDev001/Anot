@@ -6,7 +6,6 @@
     <title>Anot</title>
 
     <link rel="stylesheet" href="style.css">
-
     <script src="script.js" defer></script>
 </head>
 <body>
@@ -15,7 +14,11 @@
         <h1>Anot</h1>
 
         <div class="search-box">
-            <input type="text" placeholder="Pesquisar...">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Pesquisar..."
+            >
             <button>🔍</button>
         </div>
 
@@ -25,35 +28,29 @@
         </div>
     </header>
 
-    <main id="notesContainer"></main>
+    <main id="foldersContainer"></main>
 
-    <button id="addBtn">+</button>
+    <button id="addFolderBtn">+</button>
 
-    <!-- Modal de criação -->
-    <div id="modal" class="modal">
+    <div id="folderModal" class="modal">
 
         <div class="modal-content">
 
-            <h2>Nova Anotação</h2>
+            <h2>Novo Arquivo</h2>
 
             <input
                 type="text"
-                id="category"
-                placeholder="Categoria"
+                id="folderTitle"
+                placeholder="Título do arquivo"
             >
 
-            <textarea
-                id="note"
-                placeholder="Digite sua anotação..."
-            ></textarea>
-
             <div class="actions">
-                <button id="cancelBtn">
+                <button id="cancelFolderBtn">
                     Cancelar
                 </button>
 
-                <button id="saveBtn">
-                    Salvar
+                <button id="createFolderBtn">
+                    Pronto
                 </button>
             </div>
 

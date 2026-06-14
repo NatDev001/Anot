@@ -1,241 +1,359 @@
-const addBtn = document.getElementById("addBtn");
-const modal = document.getElementById("modal");
-const saveBtn = document.getElementById("saveBtn");
-const cancelBtn = document.getElementById("cancelBtn");
+const STORAGE_KEY = "anot_folders";
 
-const noteInput = document.getElementById("note");
-const categoryInput = document.getElementById("category");
+const foldersContainer = document.getElementById("foldersContainer");
 
-const notesContainer = document.getElementById("notesContainer");
+const addFolderBtn = document.getElementById("addFolderBtn");
 
-let categories = JSON.parse(localStorage.getItem("notes")) || {};
+const folderModal = document.getElementById("folderModal");
 
-renderAllNotes();
+const folderTitle = document.getElementById("folderTitle");
 
-addBtn.addEventListener("click", () => {
-    modal.style.display = "flex";
+const createFolderBtn =
+    document.getElementById("createFolderBtn");
+
+const cancelFolderBtn =
+    document.getElementById("cancelFolderBtn");
+
+let folders =
+    JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+addFolderBtn.addEventListener("click", () => {
+
+    folderTitle.value = "";
+
+    folderModal.style.display = "flex";
 });
 
-cancelBtn.addEventListener("click", closeModal);
+cancelFolderBtn.addEventListener("click", () => {
 
-saveBtn.addEventListener("click", () => {
+    folderModal.style.display = "none";
+});
 
-    const category = categoryInput.value.trim();
-    const content = noteInput.value.trim();
+createFolderBtn.addEventListener("click", () => {
 
-    if (!category || !content) return;
+    const title = folderTitle.value.trim();
 
-    const title = content.split("\n")[0];
+    if (!title) return;
 
-    if (!categories[category]) {
-        categories[category] = [];
-    }
+    folders.push({
 
-    categories[category].push({
+        id: Date.now(),
+
         titulo: title,
-        conteudo: content
+
+        aberto: false,
+
+        deleteMode: false,
+
+        notas: []
     });
 
-    saveNotes();
-    renderAllNotes();
-    closeModal();
+    saveFolders();
+
+    renderFolders();
+
+    folderModal.style.display = "none";
 });
 
-function saveNotes() {
-    localStorage.setItem("notes", JSON.stringify(categories));
+window.addEventListener("click", e => {
+
+    if (e.target === folderModal) {
+
+        folderModal.style.display = "none";
+    }
+});
+
+function saveFolders(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(folders)
+    );
 }
 
-function renderAllNotes() {
+function renderFolders(){
 
-    notesContainer.innerHTML = "";
+    foldersContainer.innerHTML = "";
 
-    for (const category in categories) {
+    folders.forEach(folder => {
 
-        const section = document.createElement("div");
-        section.classList.add("category");
+        const card = document.createElement("div");
 
-        section.innerHTML = `
-            <div class="category-title">• ${category}</div>
-            <div class="notes-list"></div>
+        card.className = "folder-card";
+
+        const contentClass =
+            folder.aberto
+                ? "folder-content open"
+                : "folder-content";
+
+        card.innerHTML = `
+            <div class="folder-header">
+
+                <div class="folder-title">
+                    ${folder.titulo}
+                </div>
+
+                <div
+                    class="folder-menu"
+                    data-folder="${folder.id}"
+                >
+                    ☰
+                </div>
+
+            </div>
+
+            <div class="${contentClass}">
+
+                <div class="notes-list">
+
+                    ${renderNotes(folder)}
+
+                </div>
+
+                <div class="folder-actions">
+
+                    <button
+                        class="folder-btn add-note-btn"
+                        data-folder="${folder.id}"
+                    >
+                        +
+                    </button>
+
+                    <button
+                        class="folder-btn delete-mode-btn
+                        ${folder.deleteMode ? "active" : ""}"
+                        data-folder="${folder.id}"
+                    >
+                        🗑
+                    </button>
+
+                </div>
+
+            </div>
         `;
 
-        const list = section.querySelector(".notes-list");
+        foldersContainer.appendChild(card);
+    });
 
-        categories[category].forEach(note => {
+    bindFolderEvents();
+}
 
-            const noteObj =
-                typeof note === "string"
-                    ? {
-                        titulo: note,
-                        conteudo: note
+function renderNotes(folder){
+
+    let html = "";
+
+    folder.notas.forEach(note => {
+
+        const selectable =
+            folder.deleteMode
+                ? "selectable"
+                : "";
+
+        const selected =
+            note.selected
+                ? "selected"
+                : "";
+
+        html += `
+            <div
+                class="note-item"
+                data-folder="${folder.id}"
+                data-note="${note.id}"
+            >
+
+                <div
+                    class="note-dot
+                    ${selectable}
+                    ${selected}"
+                ></div>
+
+                <div class="note-title">
+
+                    ${note.titulo}
+
+                </div>
+
+            </div>
+        `;
+    });
+
+    return html;
+}
+
+function bindFolderEvents(){
+
+    document
+        .querySelectorAll(".folder-menu")
+        .forEach(btn => {
+
+            btn.addEventListener("click", () => {
+
+                const folderId =
+                    Number(btn.dataset.folder);
+
+                const folder =
+                    folders.find(
+                        f => f.id === folderId
+                    );
+
+                folder.aberto =
+                    !folder.aberto;
+
+                saveFolders();
+
+                renderFolders();
+            });
+        });
+
+    document
+        .querySelectorAll(".add-note-btn")
+        .forEach(btn => {
+
+            btn.addEventListener("click", () => {
+
+                const folderId =
+                    btn.dataset.folder;
+
+                localStorage.setItem(
+                    "currentFolder",
+                    folderId
+                );
+
+                localStorage.removeItem(
+                    "currentNote"
+                );
+
+                window.location.href =
+                    "./anotar/index.html";
+            });
+        });
+
+    document
+        .querySelectorAll(".delete-mode-btn")
+        .forEach(btn => {
+
+            btn.addEventListener("click", () => {
+
+                const folderId =
+                    Number(btn.dataset.folder);
+
+                const folder =
+                    folders.find(
+                        f => f.id === folderId
+                    );
+
+                // Caderno vazio
+                if(
+                    !folder.deleteMode &&
+                    folder.notas.length === 0
+                ){
+
+                    const excluirCaderno =
+                        confirm(
+                            `O arquivo "${folder.titulo}" está vazio.\n\nDeseja excluí-lo?`
+                        );
+
+                    if(excluirCaderno){
+
+                        folders =
+                            folders.filter(
+                                f => f.id !== folder.id
+                            );
+
+                        saveFolders();
+
+                        renderFolders();
                     }
-                    : note;
 
-            const card = document.createElement("div");
-            card.classList.add("note-card");
-            card.style.cursor = "pointer";
-            card.style.position = "relative";
-
-            card.innerHTML = `
-                <div class="note-content">
-                    <div class="dot"></div>
-                    <span>${noteObj.titulo}</span>
-                </div>
-
-                <div class="menu">☰</div>
-
-                <div class="dropdown-menu" style="
-                    display:none;
-                    position:absolute;
-                    right:20px;
-                    top:60px;
-                    background:white;
-                    border:1px solid #ddd;
-                    border-radius:10px;
-                    overflow:hidden;
-                    z-index:1000;
-                    box-shadow:0 4px 10px rgba(0,0,0,.2);
-                ">
-                    <button class="delete-btn" style="
-                        border:none;
-                        background:white;
-                        padding:12px 20px;
-                        cursor:pointer;
-                        width:100%;
-                        text-align:left;
-                        color:red;
-                    ">
-                        Excluir
-                    </button>
-                </div>
-            `;
-
-            const menuBtn = card.querySelector(".menu");
-            const dropdown = card.querySelector(".dropdown-menu");
-            const deleteBtn = card.querySelector(".delete-btn");
-
-            // Abrir anotação ao clicar no card
-            card.addEventListener("click", () => {
-                openNote(noteObj);
-            });
-
-            // Abrir menu
-            menuBtn.addEventListener("click", (e) => {
-
-                e.stopPropagation();
-
-                document.querySelectorAll(".dropdown-menu")
-                    .forEach(menu => {
-                        if (menu !== dropdown) {
-                            menu.style.display = "none";
-                        }
-                    });
-
-                dropdown.style.display =
-                    dropdown.style.display === "block"
-                        ? "none"
-                        : "block";
-            });
-
-            // Excluir anotação
-            deleteBtn.addEventListener("click", (e) => {
-
-                e.stopPropagation();
-
-                if (!confirm(`Excluir "${noteObj.titulo}"?`)) {
                     return;
                 }
 
-                categories[category] =
-                    categories[category].filter(item => {
+                // Confirmar exclusão de notas
+                if(folder.deleteMode){
 
-                        const current =
-                            typeof item === "string"
-                                ? {
-                                    titulo: item,
-                                    conteudo: item
-                                }
-                                : item;
-
-                        return !(
-                            current.titulo === noteObj.titulo &&
-                            current.conteudo === noteObj.conteudo
+                    const selectedNotes =
+                        folder.notas.filter(
+                            n => n.selected
                         );
-                    });
 
-                if (categories[category].length === 0) {
-                    delete categories[category];
+                    if(
+                        selectedNotes.length > 0 &&
+                        confirm(
+                            `Excluir ${selectedNotes.length} nota(s)?`
+                        )
+                    ){
+
+                        folder.notas =
+                            folder.notas.filter(
+                                n => !n.selected
+                            );
+                    }
+
+                    folder.notas.forEach(
+                        n => n.selected = false
+                    );
+
+                    folder.deleteMode = false;
+                }
+                else{
+
+                    folder.deleteMode = true;
                 }
 
-                saveNotes();
-                renderAllNotes();
+                saveFolders();
+
+                renderFolders();
             });
-
-            list.appendChild(card);
         });
-
-        notesContainer.appendChild(section);
-    }
-}
-
-function openNote(note) {
-
-    const noteModal = document.createElement("div");
-    noteModal.classList.add("modal");
-    noteModal.style.display = "flex";
-
-    noteModal.innerHTML = `
-        <div class="modal-content">
-            <h2>${note.titulo}</h2>
-
-            <textarea
-                readonly
-                style="
-                    width:100%;
-                    height:300px;
-                    resize:none;
-                    margin-top:15px;
-                    padding:10px;
-                "
-            >${note.conteudo}</textarea>
-
-            <div class="actions" style="margin-top:15px;">
-                <button id="closeNoteBtn">Fechar</button>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(noteModal);
 
     document
-        .getElementById("closeNoteBtn")
-        .addEventListener("click", () => {
-            noteModal.remove();
-        });
+        .querySelectorAll(".note-item")
+        .forEach(item => {
 
-    noteModal.addEventListener("click", (e) => {
-        if (e.target === noteModal) {
-            noteModal.remove();
-        }
-    });
+            item.addEventListener("click", () => {
+
+                const folderId =
+                    Number(item.dataset.folder);
+
+                const noteId =
+                    Number(item.dataset.note);
+
+                const folder =
+                    folders.find(
+                        f => f.id === folderId
+                    );
+
+                const note =
+                    folder.notas.find(
+                        n => n.id === noteId
+                    );
+
+                if(folder.deleteMode){
+
+                    note.selected =
+                        !note.selected;
+
+                    saveFolders();
+
+                    renderFolders();
+
+                    return;
+                }
+
+                localStorage.setItem(
+                    "currentFolder",
+                    folderId
+                );
+
+                localStorage.setItem(
+                    "currentNote",
+                    noteId
+                );
+
+                window.location.href =
+                    "./anotar/index.html";
+            });
+        });
 }
 
-function closeModal() {
-    modal.style.display = "none";
-    noteInput.value = "";
-    categoryInput.value = "";
-}
-
-window.addEventListener("click", (e) => {
-    if (e.target === modal) {
-        closeModal();
-    }
-});
-
-// Fechar menus ao clicar fora
-document.addEventListener("click", () => {
-    document.querySelectorAll(".dropdown-menu")
-        .forEach(menu => {
-            menu.style.display = "none";
-        });
-});
+renderFolders();

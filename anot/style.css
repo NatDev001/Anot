@@ -7,8 +7,8 @@
 
 body{
     background:#12170d;
-    min-height:100vh;
     color:white;
+    min-height:100vh;
 }
 
 header{
@@ -16,6 +16,7 @@ header{
     padding:20px;
     border-bottom-left-radius:20px;
     border-bottom-right-radius:20px;
+
     display:flex;
     align-items:center;
     gap:20px;
@@ -37,8 +38,8 @@ header h1{
 .search-box input{
     flex:1;
     border:none;
-    padding:15px;
     outline:none;
+    padding:15px;
     font-size:16px;
 }
 
@@ -47,88 +48,188 @@ header h1{
     background:white;
     padding:0 20px;
     cursor:pointer;
-    color:#f1c40f;
-    font-size:20px;
 }
 
 .icons{
+    color:#f1c40f;
+    font-size:28px;
     display:flex;
     gap:15px;
-    font-size:28px;
-    color:#f1c40f;
 }
 
 main{
-    padding:30px;
+    padding:25px;
 }
 
-.category{
-    margin-bottom:30px;
+.folder-card{
+
+    background:#f3eee8;
+    color:#222;
+
+    border-radius:25px;
+
+    margin-bottom:20px;
+
+    overflow:hidden;
 }
 
-.category-title{
-    font-size:32px;
+.folder-header{
+
+    padding:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.folder-title{
+
+    font-size:24px;
+    font-weight:bold;
+}
+
+.folder-menu{
+
+    font-size:28px;
+    color:#f1c40f;
+
+    cursor:pointer;
+    user-select:none;
+}
+
+.folder-content{
+
+    display:none;
+
+    border-top:1px solid #ddd;
+
+    padding:15px;
+}
+
+.folder-content.open{
+    display:block;
+}
+
+.folder-actions{
+
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+
     margin-bottom:15px;
 }
 
-.note-card{
-    background:#f3eee8;
-    border-radius:25px;
-    padding:20px;
-    color:#333;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin: 10px;
+.folder-btn{
+
+    width:40px;
+    height:40px;
+
+    border:none;
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:20px;
 }
 
-.note-content{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.dot{
-    width:25px;
-    height:25px;
+.add-note-btn{
     background:#f1c40f;
+}
+
+.delete-mode-btn{
+    background:#ddd;
+}
+
+.delete-mode-btn.active{
+    background:#d63031;
+    color:white;
+}
+
+.note-item{
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    padding:10px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+}
+
+.note-item:hover{
+    background:#ece7e1;
+}
+
+.note-dot{
+
+    width:18px;
+    height:18px;
+
     border-radius:50%;
+
+    background:#f1c40f;
+
+    flex-shrink:0;
 }
 
-.menu{
-    color:#f1c40f;
-    font-size:28px;
+.note-dot.selectable{
+    background:#ddd;
 }
 
-#addBtn{
+.note-dot.selected{
+    background:#d63031;
+}
+
+.note-title{
+    flex:1;
+}
+
+#addFolderBtn{
+
     position:fixed;
-    bottom:25px;
+
     right:25px;
+    bottom:25px;
+
     width:85px;
     height:85px;
-    border-radius:20px;
+
     border:none;
+    border-radius:20px;
+
     background:#f1c40f;
-    color:black;
+
     font-size:60px;
+
     cursor:pointer;
 }
 
 .modal{
+
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.6);
+
     display:none;
+
     justify-content:center;
     align-items:center;
+
+    background:rgba(0,0,0,.6);
 }
 
 .modal-content{
+
     width:90%;
     max-width:500px;
+
     background:white;
     color:black;
+
     border-radius:15px;
+
     padding:20px;
 }
 
@@ -136,27 +237,30 @@ main{
     margin-bottom:15px;
 }
 
-.modal-content input,
-.modal-content textarea{
+.modal-content input{
+
     width:100%;
+
     padding:12px;
-    margin-bottom:10px;
+
     border:1px solid #ccc;
+
     border-radius:8px;
 }
 
-.modal-content textarea{
-    min-height:150px;
-    resize:none;
-}
-
 .actions{
+
+    margin-top:20px;
+
     display:flex;
     justify-content:flex-end;
+
     gap:10px;
 }
 
 .actions button{
+
     padding:10px 20px;
+
     cursor:pointer;
 }
